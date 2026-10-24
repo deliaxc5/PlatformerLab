@@ -1133,7 +1133,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f400c102b74152f459e255f7dfa7c2ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WalkerController
-  jumpVelocity: 15
+  jumpVelocity: 16.6
   groundCheck: {fileID: 195336449}
   groundCheckRadius: 0.15
   groundLayer:

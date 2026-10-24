@@ -39,22 +39,26 @@ public class WalkerController : MonoBehaviour
             spriteRenderer.flipX = moveInput > 0f;
         }
         Debug.Log($"moveInput = {moveInput}");
+        if (jumpAction.WasPressedThisFrame())
+        {
+            jumpRequested = true;
+        }
+
     }
 
     void FixedUpdate()
     {
-        // Move the astronaut horizontally
-        rb.linearVelocity = new Vector2(
-            moveInput * moveSpeed,
-            rb.linearVelocity.y
-        );
-
-        // Check whether the astronaut is touching the ground
+        bool wasGrounded = isGrounded;
         isGrounded = Physics2D.OverlapCircle(
-            groundCheck.position,
-            groundCheckRadius,
-            groundLayer
-        );
+            groundCheck.position, groundCheckRadius, groundLayer) != null;
+        if (isGrounded != wasGrounded) Debug.Log($"isGrounded -> {isGrounded}");
+        rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
+        if (jumpRequested && isGrounded)
+        {
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpVelocity);
+        }
+
+        jumpRequested = false;
     }
 
     void OnDrawGizmosSelected()
