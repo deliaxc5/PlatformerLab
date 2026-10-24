@@ -12,6 +12,8 @@ public class WalkerController : MonoBehaviour
 
     private InputAction jumpAction;
     private bool jumpRequested;
+    private bool jumpCutRequested;
+
     private bool isGrounded;
     [SerializeField] private float moveSpeed = 6f;
 
@@ -44,6 +46,10 @@ public class WalkerController : MonoBehaviour
             jumpRequested = true;
         }
 
+        if (jumpAction.WasReleasedThisFrame())
+        {
+            jumpCutRequested = true;
+        }
     }
 
     void FixedUpdate()
@@ -53,12 +59,19 @@ public class WalkerController : MonoBehaviour
             groundCheck.position, groundCheckRadius, groundLayer) != null;
         if (isGrounded != wasGrounded) Debug.Log($"isGrounded -> {isGrounded}");
         rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
+
         if (jumpRequested && isGrounded)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpVelocity);
         }
 
+        if (jumpCutRequested && rb.linearVelocity.y > 0f)
+        {
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * 0.5f);
+        }
+
         jumpRequested = false;
+        jumpCutRequested = false;
     }
 
     void OnDrawGizmosSelected()
